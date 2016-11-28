@@ -118,6 +118,46 @@ require_once("koulu.inc");
 		?>
 		</div>
 	</div>
+	
+	<!--MUOKKAA MAA JA NAPIT-->
+		<div class="container-fluid bg-1 text-center">
+			<div class="card card-block">
+				<h6 id="otsikko">MUOKKAA TIETOKANTAA</h6>
+				<form action="hallinta.php" method="GET">
+					<p>Valitse muokattava maa ja paina Muokkaa maata-painiketta</p>
+					<select class="w3-select w3-border w3-center" name="muokattavaMaa">
+						<?php
+						$query = "SELECT maanimi FROM maa";
+						$tulos = mysqli_query($conn, $query);
+					
+							while ($rivi = mysqli_fetch_assoc($tulos)) 
+							{ 
+								$maa = $rivi["maanimi"];							
+						?>
+							<option value="<?php echo $maa; ?>"><?php echo $maa; ?></option>	
+						<?php
+							}
+						?>
+					</select>
+					<br>
+					<button type="submit" class="w3-btn w3-black w3-large">Muokkaa maata</button>
+				</form>
+			<?php 
+				if(isset($_POST["muokkaaMaa"]))
+				{
+					$newNimi = $_POST["label"];
+					$newKuvaus = $_POST["newKuvaus"];
+					$newKokemus = $_POST["newKokemus"];
+					$newKokemusnimi = $_POST["newKokemusnimi"];
+					$query = "UPDATE maa SET kuvaus ='$newKuvaus', kokemus ='$newKokemus', kokemusnimi = '$newKokemusnimi' WHERE maanimi = '$newNimi'";
+					
+					mysqli_set_charset($conn, 'utf8');
+					$tulos = mysqli_query($conn, $query);
+					echo "<h1 id='succesfull' style='color:green;'>Maata muokattu!</h1>";
+				}
+			?>
+			</div>
+		</div>
 		
 	<!--LISÄÄ KOULU-MODAALI-->
 	<div id="addSchoolModal" class="w3-modal">
@@ -196,6 +236,8 @@ require_once("koulu.inc");
 					<input class="w3-input w3-border w3-padding" type="text" placeholder="Search for names.." id="myInput" onkeyup="myFunction()">
 					<?php
 						$query = "SELECT nimi, ID FROM koulu";
+						
+						mysqli_set_charset($conn, 'utf8');
 						$tulos = mysqli_query($conn, $query);
 						
 						echo "<table id='koulutaulukko' class='w3-table-all w3-hoverable w3-opacity'>";
@@ -239,6 +281,63 @@ require_once("koulu.inc");
 			</div>
 		</div>
 	</div>
+	
+	<!--MUOKKAA MAA-MODAALI-->
+
+	<div id="editCountry" class="w3-modal">
+			<div class="w3-modal-content w3-card-8 w3-animate-zoom" >
+				<div class="w3-center"><br>
+					<span onclick="document.getElementById('editCountry').style.display='none'" class="w3-closebtn w3-hover-pink w3-container w3-padding-8 w3-display-topright" title="Close Modal">&times;</span>
+				</div>
+				<div class="w3-section">
+					<h6 style="text-align:center;">Muokkaa</h6>
+					
+				<?php
+					if(isset($_GET["muokattavaMaa"]))
+					{
+						echo '<script language="javascript">';
+						echo "document.getElementById('editCountry').style.display='block'";
+						echo '</script>';
+						
+						$muokattavaMaa = $_GET["muokattavaMaa"];
+						$query = "SELECT id,maanimi, kuvaus,kokemus,kokemusnimi FROM maa WHERE maanimi='$muokattavaMaa'";
+						$tulos = mysqli_query($conn, $query);
+						
+						echo "<table class='w3-table-all'>";
+						echo "<tr>
+								<th>Nimi:</th>
+								<th>Maan kuvaus:</th>
+								<th>Opiskelijan nimi:</th>
+								<th>Opiskelijan kokemus:</th>
+							  </tr>";
+						
+						?> <form action="hallinta.php" method="POST">
+						<?php
+						while ($rivi = mysqli_fetch_ASSOC($tulos)) 
+						{ 
+							$id = $rivi["id"];
+							$nimi = $rivi["maanimi"];
+							$kuvaus = $rivi["kuvaus"];
+							$kokemus = $rivi["kokemus"];
+							$kokemusnimi = $rivi["kokemusnimi"];
+							echo "<tr>
+									<td><input name='label' value='$nimi' readonly></input></td>
+									<td><textarea  rows='15' cols='70' class='w3-input w3-border w3-margin-bottom' type='text' name='newKuvaus' required >$kuvaus</textarea></td>
+									<td><textarea class='w3-input w3-border w3-margin-bottom' rows='6' cols='50' type='text'  name='newKokemusnimi' required >$kokemusnimi</textarea></td>
+									<td><textarea class='w3-input w3-border w3-margin-bottom' rows='6' cols='50' type='text'  name='newKokemus' required >$kokemus</textarea></td>
+								</tr>";
+						} 
+						
+						echo "</table>";
+						?>
+						<button type="submit" value="muokkaaMaa" name="muokkaaMaa">muokkaa</button>
+						</form>
+					<?php
+					}
+				?>
+				</div>
+			</div>
+		</div>
 		
 	<!--FOOTER-->
 	<footer class="container-fluid bg-5 text-center">

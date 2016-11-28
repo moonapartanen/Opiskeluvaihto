@@ -1,9 +1,9 @@
 <?php
 	// tietokannan nimi
-	define("DB_NAME", "projekti2_2016_syksy_tacoproductions");
-	define("DB_USER", "dbadmin16stp");
-	define("DB_PASSWD", "mmpayHM7ScEcbVJ2");
-	define("DB_HOST", "codez.savonia.fi");
+	define("DB_NAME", "tacoproduction");
+	define("DB_USER", "root");
+	define("DB_PASSWD", "");
+	define("DB_HOST", "localhost");
 
 	// tehdään connect tietokantapalvelimelle
 	$conn = @mysqli_connect(DB_HOST, DB_USER, DB_PASSWD, DB_NAME); 
