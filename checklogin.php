@@ -5,7 +5,7 @@ $keksi="keksi";
 $tunnus = ($_GET["username"]);
 $salasana = ($_GET["password"]);
 
-if($tunnus=="" && $salasana=="")
+if($tunnus=="admin" && $salasana=="s4voni4")
   {
 	  setcookie("keksi",$keksi);
 	  header("location:hallinta.php");
